@@ -1,0 +1,121 @@
+{% extends 'core/base.html' %}
+
+{% block script %}
+{% if addStudentSucess %}
+    <script type="text/javascript" >
+        $(document).ready(function(){
+            $("#myModal").modal("show");
+        });
+    </script>
+
+{% endif %}
+    <script type="text/javascript" >
+        $(document).ready(function(){
+            $("#noBtn").click(function(){
+                $(window.document.location).attr('href',"/managerStudent/");
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{%block crumb%}
+
+    <li>
+        <a href="{% url 'core_choose_user' %}">Usuários</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url 'core_manager_student' %}">Aluno</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">Adicionar</a> <span class="divider">/</span>
+    </li>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="modal hide fade" id="myModal">
+        <div class="modal-header">
+            <h3>Usuário adicionado com sucesso!</h3>
+        </div>
+        <div class="modal-body">
+            <h4>Deseja adicionar outro?</h4>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" id="yesBtn" class="btn btn-primary" data-dismiss="modal" >Sim</a>
+            <a href="#" id="noBtn" class="btn" data-dismiss="modal">Não</a>
+        </div>
+    </div>
+
+    <form class="well"  method="POST" action="/managerStudent/add/">
+        {% csrf_token %}
+        <div class="control-group">
+            <div class="control-group warning">
+                <span class="label" >Nome</span>
+                <div class="controls">
+                    {{form.first_name}}
+                    <span id="first_name_error" class="help-inline">
+                        {{form.first_name.errors}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="control-group warning">
+                <span class="label" >Sobrenome</span>
+                <div class="controls">
+                    {{form.last_name}}
+                    <span id="last_name_error" class="help-inline">
+                        {{form.last_name.errors}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="control-group warning">
+                <span class="label" >Email</span>
+                <div class="controls">
+                    {{form.email}}
+                    <span id="email_error" class="help-inline">
+                        {{form.email.errors}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="control-group warning">
+                <span class="label" >Usuário</span>
+                <div class="controls">
+                    {{form.username}}
+                    <span id="username_error" class="help-inline">
+                        {{form.username.errors}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="control-group warning">
+                <span class="label" >Senha</span>
+                <div class="controls">
+                    {{form.password}}
+                    <span id="password_error" class="help-inline">
+                        {{form.password.errors}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="control-group warning">
+                <span class="label" >Confirma Senha</span>
+                <div class="controls">
+                    {{form.check_password}}
+                    <span id="check_password_error" class="help-inline">
+                        {{form.check_password.errors}}
+                    </span>
+                </div>
+            </div>
+
+
+
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </div>
+    </form>
+
+{% endblock %}

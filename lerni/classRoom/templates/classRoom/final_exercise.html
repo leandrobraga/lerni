@@ -1,0 +1,48 @@
+{% extends 'core/base.html'%}
+{% block script %}
+
+<script src="{{ STATIC_URL }}js/classRoom.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+
+    });
+
+</script>
+
+{% endblock %}
+{%block crumb%}
+    <li>
+        <a href="/student/">Home</a> <span class="divider">/</span>
+
+    </li>
+    <li>
+        <a href="#">Sala de Aula</a>
+
+    </li>
+
+
+{% endblock %}
+
+
+{% block content%}
+
+<div class="row-fluid sortable">
+    <div class="box span12">
+
+        <div class="box-header well">
+            <h2>Exercício</h2>
+        </div>
+
+        <div id='content_page' class="box-content">
+
+            FIM
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

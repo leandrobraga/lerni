@@ -1,0 +1,63 @@
+{% extends 'core/base.html'%}
+{% block script %}
+
+<script src="{{ STATIC_URL }}js/classRoom.js"></script>
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock %}
+{%block crumb%}
+    <li>
+        <a href="/student/">Home</a> <span class="divider">/</span>
+
+    </li>
+    <li>
+        <a href="#">Sala de Aula</a>
+
+    </li>
+
+
+{% endblock %}
+
+
+{% block content%}
+
+<div class="row-fluid sortable">
+    <div class="box span12">
+
+        <div class="box-header well">
+            <h2>{{topic_page.topic.title}}</h2>
+        </div>
+
+        <div id='content_page' class="box-content">
+            <form class="well"  method="POST" action="/classRoom/getPage/{{student.id}}/">
+                {% csrf_token %}
+                {{topic_page.content_page|safe}}
+                <center>
+                    {% if content_page.has_previous %}
+                    <input type="hidden" name="page_previous" id="page_previous" value="{{content_page.previous_page_number}}" />
+                    <button class="btn btn-primary" name="previous" type="submit">Anterior</button>
+                    {% endif %}
+
+                    <span class="current">
+                        {{ content_page.number }} de {{ content_page.paginator.num_pages }}
+                    </span>
+
+                    {% if content_page.has_next %}
+                    <input type="hidden" name="page_next" id="page_next" value="{{content_page.next_page_number}}" />
+                    <button class="btn btn-primary" name="next" type="submit">Próximo</button>
+                    {% else %}
+                    <input type="hidden" name="page_next" id="page_next" value="{{content_page.paginator.num_pages|add:'1'}}" />
+                    <button class="btn btn-primary" name="next" type="submit">Finalizar</button>
+                    {% endif %}
+
+                </center>
+
+            </form>
+
+        </div>
+</div>
+
+{% endblock %}

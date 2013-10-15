@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% block script %}
+    {% if topicChangeSucess %}
+
+    <script type="text/javascript" >
+        $(document).ready(function(){
+            $("#myModal").modal("show");
+        });
+    </script>
+
+{% endif %}
+
+<script type="text/javascript" >
+
+        $(document).ready(function(){
+            $("#okBtn").click(function(){
+                $(window.document.location).attr('href',"/domain/topic/");
+            });
+        });
+
+</script>
+{% endblock %}
+
+{%block crumb%}
+     <li>
+        <a href="{% url 'domain_index'%}">Domínio</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url 'domain_topic'%}">Tópico</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">Alterar</a> <span class="divider">/</span>
+    </li>
+
+
+
+{% endblock %}
+
+{% block content%}
+
+<div class="modal hide fade" id="myModal">
+    <div class="modal-header">
+        <h3>Tópico alterado com sucesso!</h3>
+    </div>
+
+    <div class="modal-footer">
+        <a href="#" id="okBtn" class="btn btn-primary" data-dismiss="modal" >OK</a>
+    </div>
+</div>
+
+
+<form action="/domain/topic/change/{{topic.id}}/" method="POST" class="well" enctype="multipart/form-data" >
+    {% csrf_token %}
+    <div class="control-group">
+        <div class="control-group warning">
+            <span class="label" >Título</span>
+            <div class="controls">
+                {{form.title}}
+                <span id="title_error" class="help-inline">
+                    {{form.title.errors}}
+                </span>
+            </div>
+        </div>
+
+        <div class="control-group warning">
+            <span class="label" >Posição</span>
+            <div class="controls">
+                {{form.position}}
+                <span id="title_error" class="help-inline">
+                    {{form.position.errors}}
+                </span>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Alterar</button>
+
+</form>
+
+{% endblock %}
+
+

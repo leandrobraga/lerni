@@ -1,0 +1,37 @@
+{% extends 'core/base.html'%}
+
+{% block script %}
+    {% if deleteTeacherSucess %}
+
+        <script type="text/javascript" >
+            $(document).ready(function(){
+                $("#myModal").modal("show");
+            });
+        </script>
+
+    {% endif %}
+        <script type="text/javascript" >
+            $(document).ready(function(){
+                $("#okBtn").click(function(){
+                    $(window.document.location).attr('href',"/managerTeacher/");
+                });
+            });
+        </script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="modal hide fade" id="myModal">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+            <h4>Professor deletado com sucesso!</h4>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" id="okBtn" class="btn btn-primary" data-dismiss="modal" >OK</a>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'core/base.html'%}
+{% block script %}
+
+<script src="{{ STATIC_URL }}js/classRoom.js"></script>
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock %}
+{%block crumb%}
+    <li>
+        <a href="/student/">Home</a> <span class="divider">/</span>
+
+    </li>
+    <li>
+        <a href="#">Sala de Aula</a>
+
+    </li>
+
+
+{% endblock %}
+
+
+{% block content%}
+
+<div class="row-fluid sortable">
+    <div class="box span12">
+
+        <div class="box-header well">
+            <h2></h2>
+        </div>
+
+        <div id='content_page' class="box-content">
+            <form class="well"  method="POST" action="/classRoom/getPage/{{student.id}}/">
+                {% csrf_token %}
+                <h3>Olá {{student.user.first_name}} !</h3>
+                {% if student.study_context.current_page.number == 1 %}
+                <h4>Vamos iniciar a aula do tópico {{student.study_context.current_topic.title}}</h4>
+                {% else %}
+                <h4>Vamos retomar a aula do tópico {{student.study_context.current_topic.title}} na página {{student.study_context.current_page.number}}.</h4>
+                    <input type="hidden" name="first" id="first" value="{{student.study_context.current_page.number}}" />
+                {% endif %}
+                <center>
+                    <button class="btn btn-primary" name="first_submit" type="submit">Iniciar</button>
+                </center>
+            </form>
+
+        </div>
+</div>
+
+{% endblock %}

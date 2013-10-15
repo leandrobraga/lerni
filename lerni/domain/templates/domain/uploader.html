@@ -1,0 +1,22 @@
+<form action="/domain/topic/add/" method="POST" class="well" enctype="multipart/form-data" >
+    {% csrf_token %}
+    <div class="control-group">
+        <div class="control-group warning">
+            <span class="label" >Título</span>
+            <div class="controls">
+                <span id="title_error" class="help-inline">
+                </span>
+            </div>
+        </div>
+
+        <div class="control-group warning">
+            <span class="label" >Posição</span>
+            <div class="controls">
+                <span id="title_error" class="help-inline">
+                </span>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Salvar</button>
+
+</form>

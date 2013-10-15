@@ -1,0 +1,122 @@
+{% extends 'core/base.html'%}
+{% block script %}
+
+<script src="{{ STATIC_URL }}js/classRoom.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+    });
+
+</script>
+
+{% endblock %}
+{%block crumb%}
+    <li>
+        <a href="/student/">Home</a> <span class="divider">/</span>
+
+    </li>
+    <li>
+        <a href="#">Sala de Aula</a>
+
+    </li>
+
+
+{% endblock %}
+
+
+{% block content%}
+
+<div class="row-fluid sortable">
+    <div class="box span12">
+
+        <div class="box-header well">
+            <h2>Exercício</h2>
+        </div>
+
+        <div id='content_page' class="box-content">
+            {% if noSelected %}
+                <p>Escolhe uma opção ai!</p>
+            {% endif %}
+            <form class="well"  method="POST" action="/classRoom/getExercise/">
+                {% csrf_token %}
+
+            <h4 class="muted" style="margin-bottom: 0;">
+                {{exercise.question|safe}}
+            </h4>
+        <br /><br /><br /><br />
+        <div class="controls">
+                <label class="radio">
+                    {% if checked == "1"%}
+                        <input type="radio" name="answer" id="answer1" value="1" checked />
+                    {% else %}
+                        <input type="radio" name="answer" id="answer1" value="1" />
+                    {% endif %}
+                        {{exercise.answer1}}
+                </label>
+        </div>
+        <br />
+
+        <div class="controls">
+                <label class="radio">
+                    {% if checked == "2"%}
+                        <input type="radio" name="answer" id="answer2" value="2" checked />
+                    {% else %}
+                        <input type="radio" name="answer" id="answer2" value="2" />
+                    {% endif %}
+                        {{exercise.answer2}}
+                </label>
+        </div>
+        <br />
+
+        <div class="controls">
+                <label class="radio">
+                    {% if checked == "3"%}
+                        <input type="radio" name="answer" id="answer3" value="3" checked />
+                    {% else %}
+                        <input type="radio" name="answer" id="answer3" value="3" />
+                    {% endif %}
+                        {{exercise.answer3}}
+                </label>
+        </div>
+        <br />
+
+        <div class="controls">
+                <label class="radio">
+                    {% if checked == "4"%}
+                        <input type="radio" name="answer" id="answer4" value="4" checked />
+                    {% else %}
+                        <input type="radio" name="answer" id="answer4" value="4" />
+                    {% endif %}
+                        {{exercise.answer4}}
+                </label>
+        </div>
+        <br />
+        <input type="hidden" name="exercise_id" id="exercise_id" value="{{exercise.id}}" />
+        <center>
+            {% if exercise1.has_previous %}
+                <input type="hidden" name="page_previous" id="page_previous" value="{{exercise1.previous_page_number}}" />
+                <button class="btn btn-primary" name="previous" type="submit">Anterior</button>
+            {% endif %}
+
+            <span class="current">
+                {{ exercise1.number }} de {{ exercise1.paginator.num_pages }}
+            </span>
+
+            {% if exercise1.has_next %}
+                <input type="hidden" name="page_next" id="page_next" value="{{exercise1.next_page_number}}" />
+                <button class="btn btn-primary" name="next" type="submit">Próximo</button>
+            {% else %}
+                <input type="hidden" name="page_next" id="page_next" value="{{exercise1.paginator.num_pages|add:'1'}}" />
+                <button class="btn btn-primary" name="next" type="submit">Finalizar</button>
+
+            {% endif %}
+
+        </center>
+    </form>
+
+        </div>
+</div>
+
+{% endblock %}

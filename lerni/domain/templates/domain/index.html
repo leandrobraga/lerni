@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{%block crumb%}
+
+<li>
+    <a href="#">Domínio</a>
+
+</li>
+
+{% endblock %}
+
+{% block content%}
+
+<div class="row-fluid sortable">
+    <div class="box span12">
+        <div class="box-content">
+            <a data-rel="tooltip" title="" class="well span3 top-block" href="/domain/topic/">
+                <span class="icon32 icon-blue icon-book"></span>
+                <div>Tópicos</div>
+                <p></p>
+            </a>
+
+            <a data-rel="tooltip" title="" class="well span3 top-block" href="/domain/exercise/">
+                <span class="icon32 icon-green icon-book"></span>
+                <div>Exercícios</div>
+                <p></p>
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

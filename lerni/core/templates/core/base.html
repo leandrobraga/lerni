@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--
+		Charisma v1.0.0
+
+		Copyright 2012 Muhammad Usman
+		Licensed under the Apache License v2.0
+		http://www.apache.org/licenses/LICENSE-2.0
+
+		http://usman.it
+		http://twitter.com/halalit_usman
+	-->
+	<meta charset="utf-8">
+	<title>{% block title%}{% endblock %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Lerni APF is a Intelligent Tutoring System for teach Function Point Analysis">
+	<meta name="author" content="Leandro Braga" >
+
+	<!-- The styles -->
+	<link href="{{ STATIC_URL }}css/bootstrap-cerulean.css" rel="stylesheet">
+	<style type="text/css">
+	  body {
+		padding-bottom: 40px;
+	  }
+	  .sidebar-nav {
+		padding: 9px 0;
+	  }
+	</style>
+	<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="{{ STATIC_URL }}css/charisma-app.css" rel="stylesheet">
+	<link href="{{ STATIC_URL }}css/jquery-ui-1.8.21.custom.css" rel="stylesheet">
+	<link href='{{ STATIC_URL }}css/fullcalendar.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/fullcalendar.print.css' rel='stylesheet'  media='print'>
+	<link href='{{ STATIC_URL }}css/chosen.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/uniform.default.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/colorbox.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/jquery.cleditor.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/jquery.noty.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/noty_theme_default.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/elfinder.min.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/elfinder.theme.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/jquery.iphone.toggle.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/opa-icons.css' rel='stylesheet'>
+	<link href='{{ STATIC_URL }}css/uploadify.css' rel='stylesheet'>
+
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- The fav icon -->
+	{% block head%}
+	{% endblock %}
+
+</head>
+
+<body>
+<!-- Início do Topo -->
+
+<!-- topbar starts -->
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="index.html"><span>LERNI APF</span></a>
+
+				<!-- theme selector starts -->
+				<div class="btn-group pull-right theme-container" >
+					
+				</div>
+				<!-- theme selector ends -->
+
+				<!-- user dropdown starts -->
+				<div class="btn-group pull-right" >
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						<span class="caret"></span>
+						<i class="icon-user"></i><span class="hidden-phone">{{request.user.first_name}}</span>
+
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Profile</a></li>
+						<li class="divider"></li>
+						<li><a href="/logout/">Logout</a></li>
+					</ul>
+				</div>
+				<!-- user dropdown ends -->
+
+				<div class="top-nav nav-collapse">
+					<ul class="nav">
+
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+
+<!-- FIM DO TOPO -->
+
+
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+
+			<!-- left menu starts -->
+			<div class="span2 main-menu-span">
+				<div class="well nav-collapse sidebar-nav">
+					<ul class="nav nav-tabs nav-stacked main-menu">
+						{% block menu_left %}
+
+						   {% if request.session.menu_type == 'student' %}
+				                        <li class="nav-header hidden-tablet">Principal</li>
+				                        <li><a class="ajax-link" href=""><i class="icon-book"></i><span class="hidden-tablet"> Lições</span></a></li>
+				                        <li><a class="ajax-link" href=""><i class="icon-file"></i><span class="hidden-tablet"> Histórico</span></a></li>
+				                        <li><a class="ajax-link" href="/classRoom/"><i class="icon-pencil"></i><span class="hidden-tablet"> Sala de Aula</span></a></li>
+				                        <li class="nav-header hidden-tablet">Pessoal</li>
+                                                            <li><a class="ajax-link" href=""><i class="icon-user"></i><span class="hidden-tablet"> Perfil</span></a></li>
+							
+						   {% elif request.session.menu_type == 'teacher' %}
+
+						       <li class="nav-header hidden-tablet">Principal</li>
+                                                            <li><a class="ajax-link" href="/chooseUser/"><i class="icon-user"></i><span class="hidden-tablet">Usuários</span></a></li>
+                                                            <li><a class="ajax-link" href="/domain/"><i class="icon-file"></i><span class="hidden-tablet"> Dominio </span></a></li>
+
+                                                        {% elif request.session.menu_type == 'administrator' %}
+						       <li class="nav-header hidden-tablet">Principal</li>
+                                                            <li><a class="ajax-link" href="/chooseUser/"><i class="icon-user"></i><span class="hidden-tablet">Usuários</span></a></li>
+
+
+						   {% endif %}
+
+
+						{% endblock %}
+					</ul>
+				</div><!--/.well -->
+			</div><!--/span-->
+			<!-- left menu ends -->
+
+			<div id="content" class="span10">
+
+				<div>
+					<ul class="breadcrumb">
+						
+		                                  {% block crumbHome %}
+						    {% if request.session.menu_type == 'administrator' %}
+
+    						        <li>
+                                                                <a href="{% url 'core_administrator' %}">Home</a> <span class="divider">/</span>
+                                                             </li>
+                                                          {% elif request.session.menu_type == 'teacher' %}
+
+                                                              <li>
+                                                                <a href="{% url 'core_teacher' %}">Home</a> <span class="divider">/</span>
+                                                             </li>
+
+                                                          {% endif %}
+
+                                                     {% endblock %}
+						{% block crumb %}
+						{% endblock %}
+
+					</ul>
+				</div>
+				{% block content%}
+				{% endblock %}
+
+			</div>
+
+
+
+
+			<noscript>
+				<div class="alert alert-block span10">
+					<h4 class="alert-heading">Warning!</h4>
+					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+				</div>
+			</noscript>
+
+			<div id="content" class="span10">
+			<!-- content starts -->
+
+
+
+
+
+<!-- RODAPÉ -->
+		<footer>
+			<p class="pull-left">&copy; <a href="#" target="_blank">Leandro Braga</a> 2013</p>
+			<p class="pull-right">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p>
+		</footer>
+
+<!-- FIM RODAPÈ -->
+
+	<!-- external javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+
+	<!-- jQuery -->
+	<script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+	<!-- jQuery UI -->
+	<script src="{{ STATIC_URL }}js/jquery-ui-1.8.21.custom.min.js"></script>
+	<!-- transition / effect library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
+	<!-- alert enhancer library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+	<!-- modal / dialog library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+	<!-- custom dropdown library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+	<!-- scrolspy library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>
+	<!-- library for creating tabs -->
+	<script src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
+	<!-- library for advanced tooltip -->
+	<script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+	<!-- popover effect library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+	<!-- button enhancer library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-button.js"></script>
+	<!-- accordion library (optional, not used in demo) -->
+	<script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+	<!-- carousel slideshow library (optional, not used in demo) -->
+	<script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
+	<!-- autocomplete library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
+	<!-- tour library -->
+	<script src="{{ STATIC_URL }}js/bootstrap-tour.js"></script>
+	<!-- library for cookie management -->
+	<script src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+	<!-- calander plugin -->
+	<script src='{{ STATIC_URL }}js/fullcalendar.min.js'></script>
+	<!-- data table plugin -->
+	<script src='{{ STATIC_URL }}js/jquery.dataTables.min.js'></script>
+
+	<!-- chart libraries start -->
+	<script src="{{ STATIC_URL }}js/excanvas.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery.flot.min.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery.flot.pie.min.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery.flot.stack.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery.flot.resize.min.js"></script>
+	<!-- chart libraries end -->
+
+	<!-- select or dropdown enhancer -->
+	<script src="{{ STATIC_URL }}js/jquery.chosen.min.js"></script>
+	<!-- checkbox, radio, and file input styler -->
+	<script src="{{ STATIC_URL }}js/jquery.uniform.min.js"></script>
+	<!-- plugin for gallery image view -->
+	<script src="{{ STATIC_URL }}js/jquery.colorbox.min.js"></script>
+	<!-- rich text editor library -->
+	<script src="{{ STATIC_URL }}js/jquery.cleditor.min.js"></script>
+	<!-- notification plugin -->
+	<script src="{{ STATIC_URL }}js/jquery.noty.js"></script>
+	<!-- file manager library -->
+	<script src="{{ STATIC_URL }}js/jquery.elfinder.min.js"></script>
+	<!-- star rating plugin -->
+	<script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
+	<!-- for iOS style toggle switch -->
+	<script src="{{ STATIC_URL }}js/jquery.iphone.toggle.js"></script>
+	<!-- autogrowing textarea plugin -->
+	<script src="{{ STATIC_URL }}js/jquery.autogrow-textarea.js"></script>
+	<!-- multiple file upload plugin -->
+	<script src="{{ STATIC_URL }}js/jquery.uploadify-3.1.min.js"></script>
+	<!-- history.js for cross-browser state change on ajax -->
+	<script src="{{ STATIC_URL }}js/jquery.history.js"></script>
+	<!-- application script for Charisma demo -->
+	<script src="{{ STATIC_URL }}js/charisma.js"></script>
+	{% block script%}
+	{% endblock %}
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'core/base.html'%}
+{%block crumb%}
+
+
+{% endblock %}
+
+{% block content%}
+<div class="row-fluid sortable">
+    <div class="box span12">
+        <div class="box-header well">
+            <h2>Seja Bem Vindo!</h2>
+        </div>
+        <div class="box-content">
+            <a data-rel="tooltip" title="" class="well span3 top-block" href="#">
+                <span class="icon32 icon-blue icon-book"></span>
+                <div>Última Lição</div>
+                {% if student.lastActivitie%}
+                    {{student.lastActivitie}}
+                {% else %}
+                    <p>Sem registro!</p>
+                {% endif %}
+           </a>
+           <a data-rel="tooltip" title="" class="well span3 top-block" href="#">
+               <span class="icon32 icon-green icon-book"></span>
+               <div>Lição Atual</div>
+           </a>
+           <div class="span4">
+               <div class="well">
+                   <h3>Concluído</h3>
+                    <div class="progress">
+                        <div class="bar" style="width: 69.23%;">69,23%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
