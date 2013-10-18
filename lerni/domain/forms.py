@@ -32,7 +32,7 @@ class PageForm(ModelForm):
         cont = 0
         for span in spans:
 
-            if u'background-color:#FFFF00' == span['style']:
+            if u'background-color:#FFFFFF' == span['style']:
 
                 cont += 1
         if cont == len(spans):

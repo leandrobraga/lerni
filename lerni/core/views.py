@@ -12,6 +12,7 @@ from lerni.core.forms import UserUpdateForm
 from lerni.core.models import Teacher
 from lerni.core.models import Student
 from lerni.core.models import StudyContext
+from lerni.core.models import Grades
 from lerni.domain.models import Topic
 from lerni.domain.models import Page
 
@@ -188,10 +189,15 @@ def create_student(request):
 
     topicFirst = Topic.objects.filter(position=1).get()
     pageFirst = Page.objects.filter(topic=topicFirst).filter(number=1).get()
-    studyContext = StudyContext(time_current_topic=0, time_current_page=0, current_topic=topicFirst, current_page=pageFirst)
+    studyContext = StudyContext(current_topic=topicFirst, current_page=pageFirst)
     studyContext.save()
-
     student.study_context = studyContext
+
+    grade = Grades(topic=topicFirst, grade_teoretical=0, grade_pratical=0, grade_final=0,
+    grade_fuzzy_teoretical=0, grade_fuzzy_pratical=0, grade_fuzzy_final=0)
+    grade.save()
+    student.grade = grade
+
     student.save()
 
     form = UserAddForm()

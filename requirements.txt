@@ -7,3 +7,4 @@ psycopg2
 django-ckeditor
 Pillow
 beautifulsoup4
+numpy
