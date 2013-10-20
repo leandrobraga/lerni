@@ -21,7 +21,7 @@ class PageForm(ModelForm):
     class Meta:
 
         model = Page
-        fields = ('content_page', 'number')
+        fields = ('content_page', 'number', 'reminder')
 
     def clean_content_page(self):
 

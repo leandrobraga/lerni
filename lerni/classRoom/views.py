@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from lerni.core.models import Student
@@ -73,7 +72,6 @@ def get_page(request, student_id):
 
                 page = 1
 
-
     else:
 
         return redirect('/classRoom/')
@@ -87,8 +85,6 @@ def get_page(request, student_id):
 
     except (EmptyPage, InvalidPage):
 
-        #exercise1 = paginator.page(paginator.num_pages)
-        #exercise = question_list[page - 1]
         return redirect('/classRoom/exercise/')
 
     return render(request, "classRoom/content.html", locals())
@@ -106,19 +102,7 @@ def exercise(request):
     request.session['question_list'] = list(theoretical_list) + list(pratical_list)
     request.session['answers'] = (["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""])
 
-    request.session['pratical_token'] = 0
-
-
-
-    #request.session['total_time_theoretical'] = 0
-    #request.session['questions_theoretical'] = questions_theoretical
-    #request.session['number_question_theoretical'] = 0
-
-    #questions_pratical = Exercise.objects.filter(kind=2).filter(topic=current_topic).order_by('?').all()[:3]
-
-    #request.session['total_time_pratical'] = 0
-    #request.session['questions_pratical'] = questions_pratical
-    #request.session['number_question_pratical'] = 0
+    #request.session['pratical_token'] = 0
 
     return render(request, "classRoom/exercise_index.html", locals())
 
@@ -152,11 +136,11 @@ def get_exercise(request):
             else:
 
                 answers = request.session['answers']
-                answers[page - 2][0]=request.POST['exercise_id']
-                answers[page - 2][1]=request.POST['answer']
+                answers[page - 2][0] = request.POST['exercise_id']
+                answers[page - 2][1] = request.POST['answer']
                 request.session['answers'] = answers
                 if page <= paginator.num_pages:
-                    checked = answers[page-1][1]
+                    checked = answers[page - 1][1]
 
         else:
 
@@ -169,7 +153,7 @@ def get_exercise(request):
                 page = 1
 
             answers = request.session['answers']
-            checked = answers[page-1][1]
+            checked = answers[page - 1][1]
 
     else:
         page = 1
@@ -240,7 +224,13 @@ def end_exercise(request):
 
     if grade_final >= 6:
 
-        next_topic = Topic.objects.filter(position=topic.position + 1).get()
+        try:
+            next_topic = Topic.objects.filter(position=topic.position + 1).get()
+
+        except(DoesNotExist):
+
+            request.session['last_topic'] = 1
+
         first_page = Page.objects.filter(topic=next_topic).filter(number=1).get()
 
         student.study_context.current_topic = next_topic
@@ -251,8 +241,10 @@ def end_exercise(request):
 
         first_page = Page.objects.filter(topic=topic).filter(number=1).get()
         student.study_context.current_page = first_page
+        next_topic = student.study_context.current_topic
+        student.study_context.save()
 
-    student.grade.topic = topic
+    student.grade.topic = next_topic
     student.grade.grade_teoretical = grade_theoretical_traditional
     student.grade.grade_pratical = grade_pratical_traditional
     student.grade.grade_final = grade_final
@@ -268,30 +260,30 @@ def end_exercise(request):
 
     student.save()
 
+    answers_detail = get_detail_answers(answers)
+
     return render(request, "classRoom/final_exercise.html", locals())
 
 
-def detail_answers(answers):
+def get_detail_answers(answers):
 
     correct_answers = []
 
-    for answer in answers:
+    for x, answer in enumerate(answers):
         exercise = Exercise.objects.get(pk=answer[0])
 
         if int(exercise.correctAnswer) == int(answer[1]):
 
-            correct_answers.append(int(answer[1]), exercise.correctAnswer, True)
+            correct_answers.append((x + 1, int(answer[1]), exercise.correctAnswer, True))
 
         else:
 
-            correct_answers.append(int(answer[1]), exercise.correctAnswer, False)
+            correct_answers.append((x + 1, int(answer[1]), exercise.correctAnswer, False))
 
     return correct_answers
 
 
 def check_answers(answers):
-
-    #correct_answers = []
 
     hits_theoretical = 0
     hits_pratical = 0
@@ -351,7 +343,7 @@ def get_time(answers):
 
 def get_grades(theoretical, pratical):
 
-    return round((theoretical * 10 / 5), 2), round((pratical * 10 / 3), 2), round(((theoretical + pratical) * 10 / 8))
+    return round((theoretical * 10 / 5.0), 2), round((pratical * 10 / 3.0), 2), round(((theoretical + pratical) * 10 / 8.0), 2)
 
 
 def get_level(grade_fuzification):
@@ -359,13 +351,25 @@ def get_level(grade_fuzification):
     higher = grade_fuzification.items()[0][1]
     level = grade_fuzification.items()[0][0]
 
-    for term, value in grade_fuzification:
+    for term, value in grade_fuzification.items():
 
         if value > higher:
             higher = value
             level = term
 
-    return level
+    if level == 'insuficiente':
+
+        level_learning = 'guide'
+
+    elif level == u'satisfatório':
+
+        level_learning = 'reactive'
+
+    else:
+
+        level_learning = 'assistant'
+
+    return level_learning
 
 
 

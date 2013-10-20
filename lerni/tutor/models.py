@@ -15,8 +15,9 @@ class Tutor(models.Model):
 
     def get_formated_page(self, student):
 
+        soup_content = BeautifulSoup(student.study_context.current_page.content_page)
+
         if student.level_learning == 'assistant':
-            soup_content = BeautifulSoup(student.study_context.current_page.content_page)
 
             for span in soup_content.findAll('span'):
                 new_tag = soup_content.new_tag("p")
@@ -32,7 +33,10 @@ class Tutor(models.Model):
             return student.study_context.current_page
 
         if student.level_learning == 'guide':
-            pass
+
+            student.study_context.current_page.content_page = str(soup_content)
+
+            return student.study_context.current_page
 
     def next_page(self, student):
 
@@ -136,7 +140,9 @@ class Tutor(models.Model):
 
         if self.otimoTeorico & self.otimoPratico:
 
-            self.valoresInferencia[u'otimo'] += self.otimoTeorico & self.otimoPratico
+            self.valoresInferencia[u'ótimo'] += self.otimoTeorico & self.otimoPratico
+
+        return self.valoresInferencia
 
 
     def defuzificacao_final(self):

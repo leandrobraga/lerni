@@ -78,7 +78,7 @@ class NivelAprendizagem(object):
 
         if self.otimoTeorico & self.otimoPratico:
 
-            self.valoresInferencia[u'otimo'] += self.otimoTeorico & self.otimoPratico
+            self.valoresInferencia[u'ótimo'] += self.otimoTeorico & self.otimoPratico
 
 
 
@@ -96,7 +96,7 @@ class NivelAprendizagem(object):
 if __name__ == '__main__':
 
     c = NivelAprendizagem()
-    c.fuzificacao(6.85, 8.36)
+    c.fuzificacao(10, 10)
     c.inferencia()
     for x,y in c.valoresInferencia.items():
         print x, y

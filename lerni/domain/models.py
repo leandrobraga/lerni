@@ -30,6 +30,7 @@ class Page(models.Model):
     content_page = RichTextField()
     number = models.SmallIntegerField(_(u'número'))
     topic = models.ForeignKey(Topic)
+    reminder = RichTextField()
 
     class Meta:
 

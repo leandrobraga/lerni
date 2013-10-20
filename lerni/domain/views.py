@@ -170,7 +170,7 @@ def create_page(request, topic_id):
 
         return render(request, "domain/addPage.html", locals())
 
-    page = Page(content_page=form.cleaned_data['content_page'], number=form.cleaned_data['number'], topic=topic)
+    page = Page(content_page=form.cleaned_data['content_page'], number=form.cleaned_data['number'], topic=topic, reminder=form.cleaned_data['reminder'])
     page.save()
 
     form = PageForm(initial={'number':(topic.get_total_pages()+1)})
@@ -218,6 +218,7 @@ def show_update_form_page(request, page_id):
 
     page = get_object_or_404(Page, pk=page_id)
     form = PageForm(instance=page)
+    print form.fields
 
     return render(request, "domain/changePage.html", locals())
 

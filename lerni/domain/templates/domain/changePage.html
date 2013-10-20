@@ -13,6 +13,20 @@ CKEDITOR.replace("id_content_page", {"filebrowserWindowWidth": 940,
     "filebrowserWindowHeight": 725,
     "toolbar": "Full"
     });
+
+CKEDITOR.replace("id_reminder", {"filebrowserWindowWidth": 940,
+    "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+    "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker", "Undo", "Redo"], ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"], ["Smiley", "SpecialChar"], ["Source"]],
+    "filebrowserUploadUrl": "/ckeditor/upload/",
+    "height": 191,
+    "width": 835,
+    "filebrowserBrowseUrl": "/ckeditor/browse/",
+    "skin": "moono",
+    "filebrowserWindowHeight": 725,
+    "toolbar": "Full",
+    "language":"pt-br",
+    });
+
 </script>
 
 
@@ -88,8 +102,19 @@ CKEDITOR.replace("id_content_page", {"filebrowserWindowWidth": 940,
 
             <div class="controls">
                 {{form.content_page}}
-                <span id="title_error" class="help-inline">
+                <span id="content_page_error" class="help-inline">
                     {{form.content_page.errors}}
+                </span>
+            </div>
+        </div>
+
+        <div class="control-group">
+        <div class="control-group warning">
+            <span class="label" >Reforço</span>
+            <div class="controls">
+                {{form.reminder}}
+                <span id="reminder_error" class="help-inline">
+                    {{form.reminder.errors}}
                 </span>
             </div>
         </div>

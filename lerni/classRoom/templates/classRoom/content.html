@@ -5,6 +5,16 @@
 
 <script type="text/javascript">
 
+function nextPage(){
+
+
+        $("#myModal").modal("show");
+
+
+
+}
+
+
 </script>
 
 {% endblock %}
@@ -32,10 +42,33 @@
         </div>
 
         <div id='content_page' class="box-content">
-            <form class="well"  method="POST" action="/classRoom/getPage/{{student.id}}/">
+            <form name="frm_content" class="well"  method="POST" action="/classRoom/getPage/{{student.id}}/">
                 {% csrf_token %}
                 {{topic_page.content_page|safe}}
+
+                {%if student.level_learning == 'guide' %}
+
+                <div class="modal hide fade" id="myModal">
+                    <div id="modal_header" class="modal-header">
+
+                    </div>
+                    <div id="modal_body" class="modal-body">
+                        {{topic_page.reminder|safe}}
+                    </div>
+
+                    <div class="modal-footer">
+                        {% if content_page.has_next %}
+                        <button class="btn btn-primary" name="next" type="submit" >Ok</button>
+                        {% else %}
+                        <button class="btn btn-primary" name="next" type="submit">Ok</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+
                 <center>
+
                     {% if content_page.has_previous %}
                     <input type="hidden" name="page_previous" id="page_previous" value="{{content_page.previous_page_number}}" />
                     <button class="btn btn-primary" name="previous" type="submit">Anterior</button>
@@ -47,10 +80,18 @@
 
                     {% if content_page.has_next %}
                     <input type="hidden" name="page_next" id="page_next" value="{{content_page.next_page_number}}" />
-                    <button class="btn btn-primary" name="next" type="submit">Próximo</button>
+                    {% if student.level_learning == 'guide' %}
+                    <button onClick="nextPage()" class="btn btn-primary" name="next" type="button" >Próximo</button>
+                    {% else %}
+                    <button class="btn btn-primary" name="next" type="submit" >Próximo</button>
+                    {% endif %}
                     {% else %}
                     <input type="hidden" name="page_next" id="page_next" value="{{content_page.paginator.num_pages|add:'1'}}" />
+                    {% if student.level_learning == 'guide' %}
+                    <button onClick="nextPage()" class="btn btn-primary" name="next" type="button">Finalizar</button>
+                    {% else %}
                     <button class="btn btn-primary" name="next" type="submit">Finalizar</button>
+                    {% endif %}
                     {% endif %}
 
                 </center>
