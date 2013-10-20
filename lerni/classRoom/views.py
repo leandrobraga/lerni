@@ -102,7 +102,7 @@ def exercise(request):
     request.session['question_list'] = list(theoretical_list) + list(pratical_list)
     request.session['answers'] = (["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""])
 
-    #request.session['pratical_token'] = 0
+    request.session['pratical_token'] = 0
 
     return render(request, "classRoom/exercise_index.html", locals())
 
