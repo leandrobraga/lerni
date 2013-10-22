@@ -207,11 +207,6 @@ def end_exercise(request):
 
     tutor = Tutor()
 
-    print "tempo gasto:", theoretical_time_spent.minute
-    print "tempo em média:", time_theoretical
-    print "acertos teóricos:", hits_theoretical
-    print "complexidade terorica:", complexity_theoretical
-
     tutor.theoretical_fuzzification(theoretical_time_spent.minute, time_theoretical, hits_theoretical, complexity_theoretical)
     grade_theoretical_fuzzification = tutor.inferencia()
     grade_theoretical_defuzzification = tutor.defuzificacao()
