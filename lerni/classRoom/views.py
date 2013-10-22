@@ -207,6 +207,11 @@ def end_exercise(request):
 
     tutor = Tutor()
 
+    print "tempo gasto:", theoretical_time_spent.minute
+    print "tempo em média:", time_theoretical
+    print "acertos teóricos:", hits_theoretical
+    print "complexidade terorica:", complexity_theoretical
+
     tutor.theoretical_fuzzification(theoretical_time_spent.minute, time_theoretical, hits_theoretical, complexity_theoretical)
     grade_theoretical_fuzzification = tutor.inferencia()
     grade_theoretical_defuzzification = tutor.defuzificacao()
@@ -249,7 +254,7 @@ def end_exercise(request):
         student.study_context.save()
 
 
-    grade = student.grades_set.create(topic=next_topic, grade_teoretical=grade_theoretical_traditional,
+    grade = student.grades_set.create(topic=topic, grade_teoretical=grade_theoretical_traditional,
         grade_pratical=grade_pratical_traditional, grade_final=grade_final,
         grade_fuzzy_teoretical=grade_theoretical_defuzzification,
         grade_fuzzy_pratical=grade_pratical_defuzzification,

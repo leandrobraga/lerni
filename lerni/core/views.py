@@ -287,8 +287,18 @@ def student(request):
     student = Student.objects.filter(user=request.user).get()
     request.session['menu_type'] = 'student'
     number_of_topics = Topic.objects.all().count()
-    completed_topics = Grades.objects.filter(finished=1).all().count()
+    completed_topics = Grades.objects.filter(student=student).filter(finished=1).all().count()
 
     percentage_of_completed_topics = str((completed_topics*100)/number_of_topics)+'%'
 
     return render(request, "core/student.html", locals())
+
+
+@login_required
+def report_card(request):
+
+    student = Student.objects.filter(user=request.user).get()
+
+    grades = Grades.objects.filter(student=student).filter(finished=1).order_by('topic').all()
+
+    return render(request, "core/report_card.html", locals())

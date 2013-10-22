@@ -55,6 +55,8 @@ urlpatterns = patterns('',
     url(r'^classRoom/getExercise/$', 'lerni.classRoom.views.get_exercise', name='classRoom_get_exercise'),
     url(r'^classRoom/endExercise/$', 'lerni.classRoom.views.end_exercise', name='classRoom_end_exercise'),
 
+    url(r'^reportCard/$', 'lerni.core.views.report_card', name='core_report_card'),
+
     url(r'^ckeditor/', include('ckeditor.urls')),
 
 )

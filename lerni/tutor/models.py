@@ -83,13 +83,9 @@ class Tutor(models.Model):
         self.satisfatorioTeorico = satisfatorioFuncaoFuzzy(teorico)
         self.otimoTeorico = otimoFuncaoFuzzy(teorico)
 
-        print self.insuficienteTeorico, self.satisfatorioTeorico, self.otimoTeorico
-
         self.insuficientePratico = insuficienteFuncaoFuzzy(pratico)
         self.satisfatorioPratico = satisfatorioFuncaoFuzzy(pratico)
         self.otimoPratico = otimoFuncaoFuzzy(pratico)
-
-        print self.insuficientePratico, self.satisfatorioPratico, self.otimoPratico
 
         self.rangeTeorico = linspace(0, 11.85)
 
@@ -144,7 +140,6 @@ class Tutor(models.Model):
 
         return self.valoresInferencia
 
-
     def defuzificacao_final(self):
 
         saida = self.insuficiente & self.valoresInferencia['insuficiente']\
@@ -155,10 +150,9 @@ class Tutor(models.Model):
 
         return round(self.notaFinal, 2)
 
-
     def theoretical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade):
 
-        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(1, mediaExercicio - 0.1)
+        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(4, mediaExercicio - 0.1)
         tempoEficienteFuncaoFuzzy = Triangle(mediaExercicio - 1.1, mediaExercicio, mediaExercicio + 1.1)
         tempopoucoEficienteFuncaoFuzzy = IncreasingRamp(mediaExercicio, 50)
 
@@ -194,7 +188,7 @@ class Tutor(models.Model):
 
     def pratical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade):
 
-        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(1, mediaExercicio - 0.1)
+        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(4, mediaExercicio - 0.1)
         tempoEficienteFuncaoFuzzy = Triangle(mediaExercicio - 1.1, mediaExercicio, mediaExercicio + 1.1)
         tempopoucoEficienteFuncaoFuzzy = IncreasingRamp(mediaExercicio, 30)
 
@@ -378,4 +372,4 @@ class Tutor(models.Model):
 
         self.notaFinal = Centroid(saida, self.rangeTeorico)
 
-        return self.notaFinal
+        return round(self.notaFinal, 2)
