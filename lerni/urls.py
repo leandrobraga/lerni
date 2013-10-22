@@ -17,7 +17,6 @@ urlpatterns = patterns('',
     url(r'^administrator/$', 'lerni.core.views.administrator', name='core_administrator'),
     url(r'^teacher/$', 'lerni.core.views.teacher', name='core_teacher'),
 
-
     url(r'^chooseUser/$', 'lerni.core.views.choose_user', name='core_choose_user'),
 
     url(r'^managerTeacher/$', 'lerni.core.views.manager_teacher', name='core_manager_teacher'),

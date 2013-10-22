@@ -4,10 +4,14 @@
 <script src="{{ STATIC_URL }}js/classRoom.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    function nextPage(){
 
 
-    });
+        $("#myModal").modal("show");
+
+
+
+}
 
 </script>
 
@@ -45,6 +49,28 @@
             <h4 class="muted" style="margin-bottom: 0;">
                 {{exercise.question|safe}}
             </h4>
+
+            {%if student.level_learning == 'guide' %}
+
+                <div class="modal hide fade" id="myModal">
+                    <div id="modal_header" class="modal-header">
+
+                    </div>
+                    <div id="modal_body" class="modal-body">
+                        {{exercise.reminder|safe}}
+                    </div>
+
+                    <div class="modal-footer">
+                        {% if exercise1.has_next %}
+                        <button class="btn btn-primary" name="next" type="submit" >Ok</button>
+                        {% else %}
+                        <button class="btn btn-primary" name="next" type="submit">Ok</button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+
         <br /><br /><br /><br />
         <div class="controls">
                 <label class="radio">
@@ -96,20 +122,29 @@
         <input type="hidden" name="exercise_id" id="exercise_id" value="{{exercise.id}}" />
         <center>
             {% if exercise1.has_previous %}
+
                 <input type="hidden" name="page_previous" id="page_previous" value="{{exercise1.previous_page_number}}" />
                 <button class="btn btn-primary" name="previous" type="submit">Anterior</button>
-            {% endif %}
+                {% endif %}
 
-            <span class="current">
-                {{ exercise1.number }} de {{ exercise1.paginator.num_pages }}
-            </span>
+                <span class="current">
+                    {{ exercise1.number }} de {{ exercise1.paginator.num_pages }}
+                </span>
 
-            {% if exercise1.has_next %}
+                {% if exercise1.has_next %}
                 <input type="hidden" name="page_next" id="page_next" value="{{exercise1.next_page_number}}" />
-                <button class="btn btn-primary" name="next" type="submit">Próximo</button>
-            {% else %}
+                {% if student.level_learning == 'guide' %}
+                <button onClick="nextPage()" class="btn btn-primary" name="next" type="button" >Próximo</button>
+                {% else %}
+                <button class="btn btn-primary" name="next" type="submit" >Próximo</button>
+                {% endif %}
+                {% else %}
                 <input type="hidden" name="page_next" id="page_next" value="{{exercise1.paginator.num_pages|add:'1'}}" />
+                {% if student.level_learning == 'guide' %}
+                <button onClick="nextPage()" class="btn btn-primary" name="next" type="button">Finalizar</button>
+                {% else %}
                 <button class="btn btn-primary" name="next" type="submit">Finalizar</button>
+                {% endif %}
 
             {% endif %}
 

@@ -189,16 +189,14 @@ def create_student(request):
 
     topicFirst = Topic.objects.filter(position=1).get()
     pageFirst = Page.objects.filter(topic=topicFirst).filter(number=1).get()
-    studyContext = StudyContext(current_topic=topicFirst, current_page=pageFirst)
+    studyContext = StudyContext(current_topic=topicFirst, current_page=pageFirst, finished=0)
     studyContext.save()
     student.study_context = studyContext
 
-    grade = Grades(topic=topicFirst, grade_teoretical=0, grade_pratical=0, grade_final=0,
-    grade_fuzzy_teoretical=0, grade_fuzzy_pratical=0, grade_fuzzy_final=0)
-    grade.save()
-    student.grade = grade
-
     student.save()
+
+    #student.grades_set.create(topic=topicFirst, grade_teoretical=0, grade_pratical=0, grade_final=0,
+    #grade_fuzzy_teoretical=0, grade_fuzzy_pratical=0, grade_fuzzy_final=0)
 
     form = UserAddForm()
     addStudentSucess = 1
@@ -286,5 +284,11 @@ def delete_student(request, student_id):
 @login_required
 def student(request):
 
+    student = Student.objects.filter(user=request.user).get()
     request.session['menu_type'] = 'student'
+    number_of_topics = Topic.objects.all().count()
+    completed_topics = Grades.objects.filter(finished=1).all().count()
+
+    percentage_of_completed_topics = str((completed_topics*100)/number_of_topics)+'%'
+
     return render(request, "core/student.html", locals())

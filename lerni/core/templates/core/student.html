@@ -11,24 +11,21 @@
             <h2>Seja Bem Vindo!</h2>
         </div>
         <div class="box-content">
-            <a data-rel="tooltip" title="" class="well span3 top-block" href="#">
-                <span class="icon32 icon-blue icon-book"></span>
-                <div>Última Lição</div>
-                {% if student.lastActivitie%}
-                    {{student.lastActivitie}}
-                {% else %}
-                    <p>Sem registro!</p>
-                {% endif %}
-           </a>
+
            <a data-rel="tooltip" title="" class="well span3 top-block" href="#">
                <span class="icon32 icon-green icon-book"></span>
                <div>Lição Atual</div>
+                {% if student.study_context.finished == 1%}
+                    <p>Curso Concluído</p>
+                {% else %}
+                    {{student.study_context.current_topic}}
+                {% endif %}
            </a>
            <div class="span4">
                <div class="well">
                    <h3>Concluído</h3>
                     <div class="progress">
-                        <div class="bar" style="width: 69.23%;">69,23%</div>
+                        <div class="bar" style="width: {{percentage_of_completed_topics}};">{{percentage_of_completed_topics}}</div>
                     </div>
                 </div>
             </div>

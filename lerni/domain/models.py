@@ -55,6 +55,7 @@ class Exercise(models.Model):
     level = models.SmallIntegerField(_(u'nível'), choices=LEVEL_CHOICE)
     time = models.SmallIntegerField(_(u'tempo provável de reposta'), choices=TIME_CHOICE)
     kind = models.SmallIntegerField(_(u'tipo'), choices=KIND_CHOICE)
+    reminder = RichTextField(_(u'reforço'))
 
     class Meta:
 

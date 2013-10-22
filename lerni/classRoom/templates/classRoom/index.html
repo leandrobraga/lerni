@@ -32,6 +32,10 @@
         </div>
 
         <div id='content_page' class="box-content">
+            {% if student.study_context.finished = 1%}
+                <h3>Parabéns {{student.user.first_name}}, você já concluiu o curso!</h3>
+
+            {% else %}
             <form class="well"  method="POST" action="/classRoom/getPage/{{student.id}}/">
                 {% csrf_token %}
                 <h3>Olá {{student.user.first_name}} !</h3>
@@ -45,6 +49,7 @@
                     <button class="btn btn-primary" name="first_submit" type="submit">Iniciar</button>
                 </center>
             </form>
+            {% endif %}
 
         </div>
 </div>

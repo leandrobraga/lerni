@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.exceptions import ObjectDoesNotExist
 
 from lerni.core.models import Student
 from lerni.tutor.models import Tutor
@@ -29,7 +30,7 @@ def index(request):
 def get_page(request, student_id):
 
     student = get_object_or_404(Student, pk=student_id)
-    current_topic = current_topic = student.study_context.current_topic
+    current_topic = student.study_context.current_topic
     tutor = Tutor()
     pages_list = Page.objects.filter(topic=current_topic).all()
     paginator = Paginator(pages_list, 1)
@@ -100,9 +101,9 @@ def exercise(request):
     pratical_list = Exercise.objects.filter(kind=2).filter(topic=current_topic).order_by('?').all()[:3]
 
     request.session['question_list'] = list(theoretical_list) + list(pratical_list)
-    request.session['answers'] = (["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""])
-
     request.session['pratical_token'] = 0
+
+    request.session['answers'] = (["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""])
 
     return render(request, "classRoom/exercise_index.html", locals())
 
@@ -224,14 +225,16 @@ def end_exercise(request):
 
     if grade_final >= 6:
 
+        finished = 1
         try:
             next_topic = Topic.objects.filter(position=topic.position + 1).get()
+            first_page = Page.objects.filter(topic=next_topic).filter(number=1).get()
 
-        except(DoesNotExist):
+        except(ObjectDoesNotExist):
 
-            request.session['last_topic'] = 1
-
-        first_page = Page.objects.filter(topic=next_topic).filter(number=1).get()
+            student.study_context.finished = 1
+            next_topic = topic
+            first_page = Page.objects.filter(topic=next_topic).filter(number=1).get()
 
         student.study_context.current_topic = next_topic
         student.study_context.current_page = first_page
@@ -239,20 +242,19 @@ def end_exercise(request):
 
     else:
 
+        finished = 0
         first_page = Page.objects.filter(topic=topic).filter(number=1).get()
         student.study_context.current_page = first_page
         next_topic = student.study_context.current_topic
         student.study_context.save()
 
-    student.grade.topic = next_topic
-    student.grade.grade_teoretical = grade_theoretical_traditional
-    student.grade.grade_pratical = grade_pratical_traditional
-    student.grade.grade_final = grade_final
-    student.grade.grade_fuzzy_teoretical = grade_theoretical_defuzzification
-    student.grade.grade_fuzzy_pratical = grade_pratical_defuzzification
-    student.grade.grade_fuzzy_final = grade_final_defuzzification
 
-    student.grade.save()
+    grade = student.grades_set.create(topic=next_topic, grade_teoretical=grade_theoretical_traditional,
+        grade_pratical=grade_pratical_traditional, grade_final=grade_final,
+        grade_fuzzy_teoretical=grade_theoretical_defuzzification,
+        grade_fuzzy_pratical=grade_pratical_defuzzification,
+        grade_fuzzy_final=grade_final_defuzzification,
+        finished=finished)
 
     student.level_learning = get_level(grade_final_fuzzification)
     student.level_learning_theoretical = get_level(grade_theoretical_fuzzification)
@@ -289,6 +291,7 @@ def check_answers(answers):
     hits_pratical = 0
 
     for x, answer in enumerate(answers):
+
         exercise = Exercise.objects.get(pk=answer[0])
 
         if int(exercise.correctAnswer) == int(answer[1]):

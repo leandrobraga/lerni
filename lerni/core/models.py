@@ -17,6 +17,17 @@ class StudyContext(models.Model):
 
     current_topic = models.ForeignKey(Topic)
     current_page = models.ForeignKey(Page)
+    finished = models.SmallIntegerField()
+
+
+class Student(models.Model):
+
+    user = models.ForeignKey(User, null=False)
+    level_learning = models.CharField(max_length=200)
+    level_learning_theoretical = models.CharField(max_length=200)
+    level_learning_pratical = models.CharField(max_length=200)
+    study_context = models.OneToOneField(StudyContext)
+    #grade = models.ForeignKey(Grades, null=False)
 
 
 class Grades(models.Model):
@@ -28,13 +39,5 @@ class Grades(models.Model):
     grade_fuzzy_teoretical = models.SmallIntegerField(_(u'nota fuzzy teórica'))
     grade_fuzzy_pratical = models.SmallIntegerField(_(u'nota fuzzy prática'))
     grade_fuzzy_final = models.SmallIntegerField(_(u'nota fuzzy final'))
-
-
-class Student(models.Model):
-
-    user = models.ForeignKey(User, null=False)
-    level_learning = models.CharField(max_length=200)
-    level_learning_theoretical = models.CharField(max_length=200)
-    level_learning_pratical = models.CharField(max_length=200)
-    study_context = models.OneToOneField(StudyContext)
-    grade = models.ForeignKey(Grades, null=False)
+    student = models.ForeignKey(Student)
+    finished = models.SmallIntegerField()

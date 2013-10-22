@@ -16,6 +16,18 @@
     "filebrowserWindowHeight": 725,
     "toolbar": "Full"
     });
+
+    CKEDITOR.replace("id_reminder", {"filebrowserWindowWidth": 940,
+    "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+    "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker", "Undo", "Redo"], ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"], ["Smiley", "SpecialChar"], ["Source"]],
+    "filebrowserUploadUrl": "/ckeditor/upload/",
+    "height": 100,
+    "width": 900,
+    "filebrowserBrowseUrl": "/ckeditor/browse/",
+    "skin": "moono",
+    "filebrowserWindowHeight": 725,
+    "toolbar": "Full"
+    });
 </script>
 
     {% if addExerciseSucess %}
@@ -101,6 +113,17 @@
                 {{form.question}}
                 <span id="title_error" class="help-inline">
                     {{form.question.errors}}
+                </span>
+            </div>
+        </div>
+
+        <div class="control-group">
+        <div class="control-group warning">
+            <span class="label" >Reforço</span>
+            <div class="controls">
+                {{form.reminder}}
+                <span id="title_error" class="help-inline">
+                    {{form.reminder.errors}}
                 </span>
             </div>
         </div>
