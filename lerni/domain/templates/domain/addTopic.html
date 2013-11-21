@@ -78,6 +78,28 @@
             </div>
         </div>
 
+        <div class="control-group warning">
+            <span class="label" >Número de Questões Teóricas</span>
+            <div class="controls">
+                {{form.number_question_theoretical}}
+                <span id="title_error" class="help-inline">
+                    {{form.number_question_theoretical.errors}}
+                </span>
+            </div>
+        </div>
+
+        <div class="control-group warning">
+            <span class="label" >Número de Questões Práticas</span>
+            <div class="controls">
+                {{form.number_question_pratical}}
+                <span id="title_error" class="help-inline">
+                    {{form.number_question_pratical.errors}}
+                </span>
+            </div>
+        </div>
+
+
+
         <button class="btn btn-primary" type="submit">Salvar</button>
 
 </form>

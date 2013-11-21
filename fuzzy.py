@@ -20,7 +20,7 @@ class NivelAprendizagem(object):
         self.muitoEficiente = tempoMuitoEficienteFuncaoFuzzy(tempoExercicio)
         self.eficiente = tempoEficienteFuncaoFuzzy(tempoExercicio)
         self.poucoEficiente = tempopoucoEficienteFuncaoFuzzy(tempoExercicio)
-
+        
         acertoInsuficienteFuncaoFuzzy = DecreasingRamp(0, 3)
         acertoSatisfatorioFuncaoFuzzy = Triangle(1.9, 3, 4.1)
         acertoOtimoFuncaoFuzzy = IncreasingRamp(3.4, 5)
@@ -202,7 +202,7 @@ class NivelAprendizagem(object):
 if __name__ == '__main__':
 
     c = NivelAprendizagem()
-    c.fuzificacao(0, 5, 5, 1)
+    c.fuzificacao(5, 5, 5, 1)
     c.inferencia()
     for x,y in c.valoresInferencia.items():
         print x, y

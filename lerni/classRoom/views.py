@@ -97,13 +97,19 @@ def exercise(request):
     student = Student.objects.get(user=request.user)
     current_topic = student.study_context.current_topic
 
-    theoretical_list = Exercise.objects.filter(kind=1).filter(topic=current_topic).order_by('?').all()[:5]
-    pratical_list = Exercise.objects.filter(kind=2).filter(topic=current_topic).order_by('?').all()[:3]
+    theoretical_list = Exercise.objects.filter(kind=1).filter(topic=current_topic).order_by('?').all()[:current_topic.number_question_theoretical]
+    pratical_list = Exercise.objects.filter(kind=2).filter(topic=current_topic).order_by('?').all()[:current_topic.number_question_pratical]
 
     request.session['question_list'] = list(theoretical_list) + list(pratical_list)
     request.session['pratical_token'] = 0
 
-    request.session['answers'] = (["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""])
+    templates_grade = []
+
+    for x in xrange(current_topic.number_question_theoretical+current_topic.number_question_pratical):
+
+        templates_grade.append(['',''])
+
+    request.session['answers'] = templates_grade
 
     return render(request, "classRoom/exercise_index.html", locals())
 
@@ -111,6 +117,8 @@ def exercise(request):
 @login_required
 def get_exercise(request):
 
+    student = request.session['student']
+    current_topic = student.study_context.current_topic
     question_list = request.session['question_list']
     paginator = Paginator(question_list, 1)
 
@@ -162,7 +170,7 @@ def get_exercise(request):
         request.session['theoretical_initial_time'] = time.time()
 
     #Inicia contagem de tempo do exercio teórico e finaliza o prático
-    if page == 6:
+    if page == current_topic.number_question_theoretical+1:
 
         request.session['theoretical_final_time'] = time.time()
 
@@ -199,9 +207,11 @@ def end_exercise(request):
 
     answers = request.session['answers']
 
-    hits_theoretical, hits_pratical = check_answers(answers)
+    topic = student.study_context.current_topic
 
-    complexity_theoretical, complexity_pratical = get_complexity(answers)
+    hits_theoretical, hits_pratical = check_answers(answers,topic)
+
+    complexity_theoretical, complexity_pratical = get_complexity(answers, topic)
 
     time_theoretical, time_pratical = get_time(answers)
 
@@ -221,9 +231,9 @@ def end_exercise(request):
 
     grade_theoretical_traditional, grade_pratical_traditional, grade_final = get_grades(hits_theoretical, hits_pratical)
 
-    topic = student.study_context.current_topic
+    
 
-    if grade_final >= 6:
+    if grade_final >= 5:
 
         finished = 1
         try:
@@ -285,7 +295,7 @@ def get_detail_answers(answers):
     return correct_answers
 
 
-def check_answers(answers):
+def check_answers(answers, topic):
 
     hits_theoretical = 0
     hits_pratical = 0
@@ -295,7 +305,7 @@ def check_answers(answers):
         exercise = Exercise.objects.get(pk=answer[0])
 
         if int(exercise.correctAnswer) == int(answer[1]):
-            if x + 1 <= 5:
+            if x + 1 <= topic.number_question_theoretical:
 
                 hits_theoretical += 1
 
@@ -305,7 +315,7 @@ def check_answers(answers):
     return hits_theoretical, hits_pratical
 
 
-def get_complexity(answers):
+def get_complexity(answers, topic):
 
     complexity_theoretical = 0
     complexity_pratical = 0
@@ -314,7 +324,7 @@ def get_complexity(answers):
 
         exercise = Exercise.objects.get(pk=answer[0])
 
-        if int(x) + 1 <= 5:
+        if int(x) + 1 <= topic.number_question_theoretical:
 
             complexity_theoretical += exercise.level
 
@@ -322,7 +332,7 @@ def get_complexity(answers):
 
             complexity_pratical += exercise.level
 
-    return (complexity_theoretical) / 5, (complexity_pratical) / 3
+    return (complexity_theoretical) / topic.number_question_theoretical, (complexity_pratical) / topic.number_question_pratical
 
 
 def get_time(answers):

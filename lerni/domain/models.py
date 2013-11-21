@@ -9,6 +9,8 @@ class Topic(models.Model):
 
     title = models.CharField(_(u'título'), max_length=200, unique=True)
     position = models.SmallIntegerField(_(u'posição'), unique=True)
+    number_question_theoretical = models.SmallIntegerField(_(u'número de questões teóricas'))
+    number_question_pratical = models.SmallIntegerField(_(u'número de questões práticas'))
 
     class Meta:
 
