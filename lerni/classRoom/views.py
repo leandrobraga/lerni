@@ -213,15 +213,15 @@ def end_exercise(request):
 
     complexity_theoretical, complexity_pratical = get_complexity(answers, topic)
 
-    time_theoretical, time_pratical = get_time(answers)
+    time_theoretical, time_pratical = get_time(answers,topic)
 
     tutor = Tutor()
 
-    tutor.theoretical_fuzzification(theoretical_time_spent.minute, time_theoretical, hits_theoretical, complexity_theoretical)
+    tutor.theoretical_fuzzification(theoretical_time_spent.minute, time_theoretical, hits_theoretical, complexity_theoretical, topic)
     grade_theoretical_fuzzification = tutor.inferencia()
     grade_theoretical_defuzzification = tutor.defuzificacao()
 
-    tutor.pratical_fuzzification(pratical_time_spent.minute, time_pratical, hits_pratical, complexity_pratical)
+    tutor.pratical_fuzzification(pratical_time_spent.minute, time_pratical, hits_pratical, complexity_pratical, topic)
     grade_pratical_fuzzification = tutor.inferencia()
     grade_pratical_defuzzification = tutor.defuzificacao()
 
@@ -229,9 +229,8 @@ def end_exercise(request):
     grade_final_fuzzification = tutor.inferencia_final()
     grade_final_defuzzification = tutor.defuzificacao_final()
 
-    grade_theoretical_traditional, grade_pratical_traditional, grade_final = get_grades(hits_theoretical, hits_pratical)
+    grade_theoretical_traditional, grade_pratical_traditional, grade_final = get_grades(hits_theoretical, hits_pratical, topic)
 
-    
 
     if grade_final >= 5:
 
@@ -335,7 +334,7 @@ def get_complexity(answers, topic):
     return (complexity_theoretical) / topic.number_question_theoretical, (complexity_pratical) / topic.number_question_pratical
 
 
-def get_time(answers):
+def get_time(answers,topic):
 
     time_theoretical = 0
     time_pratical = 0
@@ -343,7 +342,7 @@ def get_time(answers):
     for x, answer in enumerate(answers):
         exercise = Exercise.objects.get(pk=answer[0])
 
-        if int(x) + 1 <= 5:
+        if int(x) + 1 <= topic.number_question_theoretical:
 
             time_theoretical += exercise.time
 
@@ -354,9 +353,9 @@ def get_time(answers):
     return time_theoretical, time_pratical
 
 
-def get_grades(theoretical, pratical):
+def get_grades(theoretical, pratical, topic):
 
-    return round((theoretical * 10 / 5.0), 2), round((pratical * 10 / 3.0), 2), round(((theoretical + pratical) * 10 / 8.0), 2)
+    return round((theoretical * 10 / topic.number_question_theoretical), 2), round((pratical * 10 / topic.number_question_pratical), 2), round(((theoretical + pratical) * 10 / 8.0), 2)
 
 
 def get_level(grade_fuzification):

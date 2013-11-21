@@ -9,6 +9,7 @@ from lerni.domain.models import Exercise
 from fuzzy import *
 from numpy import linspace
 from bs4 import BeautifulSoup
+from math import ceil
 
 
 class Tutor(models.Model):
@@ -150,9 +151,9 @@ class Tutor(models.Model):
 
         return round(self.notaFinal, 2)
 
-    def theoretical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade):
+    def theoretical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade, topic):
 
-        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(4, mediaExercicio - 0.1)
+        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(0, mediaExercicio - 0.1)
         tempoEficienteFuncaoFuzzy = Triangle(mediaExercicio - 1.1, mediaExercicio, mediaExercicio + 1.1)
         tempopoucoEficienteFuncaoFuzzy = IncreasingRamp(mediaExercicio, 50)
 
@@ -160,9 +161,10 @@ class Tutor(models.Model):
         self.eficiente = tempoEficienteFuncaoFuzzy(tempoExercicio)
         self.poucoEficiente = tempopoucoEficienteFuncaoFuzzy(tempoExercicio)
 
-        acertoInsuficienteFuncaoFuzzy = DecreasingRamp(0, 3)
-        acertoSatisfatorioFuncaoFuzzy = Triangle(1.9, 3, 4.1)
-        acertoOtimoFuncaoFuzzy = IncreasingRamp(3.4, 5)
+        center = ceil(topic.number_question_theoretical/2.)
+        acertoInsuficienteFuncaoFuzzy = DecreasingRamp(0, center)
+        acertoSatisfatorioFuncaoFuzzy = Triangle((center-1.1), center, (center+1.1))
+        acertoOtimoFuncaoFuzzy = IncreasingRamp((center+1.4), topic.number_question_theoretical)
 
         self.acertoInsuficiente = acertoInsuficienteFuncaoFuzzy(acertos)
         self.acertoSatisfatorio = acertoSatisfatorioFuncaoFuzzy(acertos)
@@ -178,27 +180,28 @@ class Tutor(models.Model):
 
         self.rangeTeorico = linspace(0, 11.22)
 
-        InsuficienteFuncaoFuzzy = DecreasingRamp(0, 6)
-        SatisfatorioFuncaoFuzzy = Triangle(4.9, 6, 8.1)
-        OtimoFuncaoFuzzy = IncreasingRamp(7.9, 10)
+        InsuficienteFuncaoFuzzy = DecreasingRamp(0, 5)
+        SatisfatorioFuncaoFuzzy = Triangle(3.9, 5, 7.1)
+        OtimoFuncaoFuzzy = IncreasingRamp(6.9, 10)
 
         self.insuficiente = InsuficienteFuncaoFuzzy(self.rangeTeorico)
         self.satisfatorio = SatisfatorioFuncaoFuzzy(self.rangeTeorico)
         self.otimo = OtimoFuncaoFuzzy(self.rangeTeorico)
 
-    def pratical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade):
+    def pratical_fuzzification(self, tempoExercicio, mediaExercicio, acertos, complexidade, topic):
 
-        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(4, mediaExercicio - 0.1)
+        tempoMuitoEficienteFuncaoFuzzy = DecreasingRamp(0, mediaExercicio - 0.1)
         tempoEficienteFuncaoFuzzy = Triangle(mediaExercicio - 1.1, mediaExercicio, mediaExercicio + 1.1)
         tempopoucoEficienteFuncaoFuzzy = IncreasingRamp(mediaExercicio, 30)
 
         self.muitoEficiente = tempoMuitoEficienteFuncaoFuzzy(tempoExercicio)
         self.eficiente = tempoEficienteFuncaoFuzzy(tempoExercicio)
         self.poucoEficiente = tempopoucoEficienteFuncaoFuzzy(tempoExercicio)
-
-        acertoInsuficienteFuncaoFuzzy = DecreasingRamp(1, 2)
-        acertoSatisfatorioFuncaoFuzzy = Triangle(0.9, 2, 3.1)
-        acertoOtimoFuncaoFuzzy = IncreasingRamp(1.9, 3)
+        
+        center = ceil(topic.number_question_pratical/2.)
+        acertoInsuficienteFuncaoFuzzy = DecreasingRamp(0, center)
+        acertoSatisfatorioFuncaoFuzzy = Triangle((center-1.1), center, (center+1.1))
+        acertoOtimoFuncaoFuzzy = IncreasingRamp((center+1.4), topic.number_question_pratical)
 
         self.acertoInsuficiente = acertoInsuficienteFuncaoFuzzy(acertos)
         self.acertoSatisfatorio = acertoSatisfatorioFuncaoFuzzy(acertos)
@@ -214,9 +217,9 @@ class Tutor(models.Model):
 
         self.rangeTeorico = linspace(0, 11.85)
 
-        InsuficienteFuncaoFuzzy = DecreasingRamp(0, 6)
-        SatisfatorioFuncaoFuzzy = Triangle(4.9, 6, 8.1)
-        OtimoFuncaoFuzzy = IncreasingRamp(7.9, 10)
+        InsuficienteFuncaoFuzzy = DecreasingRamp(0, 5)
+        SatisfatorioFuncaoFuzzy = Triangle(3.9, 5, 7.1)
+        OtimoFuncaoFuzzy = IncreasingRamp(6.9, 10)
 
         self.insuficiente = InsuficienteFuncaoFuzzy(self.rangeTeorico)
         self.satisfatorio = SatisfatorioFuncaoFuzzy(self.rangeTeorico)
